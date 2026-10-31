@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="uz" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kitoblar — BookNest</title>
+<meta name="description" content="BookNest kitoblar katalogi: badiiy adabiyot, biznes, rivojlanish, tarix, bolalar kitoblari. Qidiruv, filtr va saralash.">
+<meta name="theme-color" content="#2f6f4f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem("bn_theme");
+      if (!t) t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  })();
+</script>
+<style>
+/* =========================================================
+   1. CSS O'ZGARUVCHILAR (Light / Dark)
+   ========================================================= */
+:root {
+  --bg: #faf7f2;
+  --surface: #ffffff;
+  --surface-2: #f3ede3;
+  --text: #2a2118;
+  --muted: #7a6c5d;
+  --primary: #2f6f4f;
+  --primary-dark: #245840;
+  --primary-soft: #e3f0e9;
+  --accent: #c8873a;
+  --danger: #d6455d;
+  --border: #e6dccd;
+  --shadow-sm: 0 2px 8px rgba(60, 40, 20, 0.08);
+  --shadow-md: 0 10px 30px rgba(60, 40, 20, 0.12);
+  --shadow-lg: 0 25px 60px rgba(60, 40, 20, 0.2);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --header-h: 72px;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-head: "Playfair Display", Georgia, serif;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+[data-theme="dark"] {
+  --bg: #14110e;
+  --surface: #1e1a16;
+  --surface-2: #272119;
+  --text: #f1e9de;
+  --muted: #a89b8b;
+  --primary: #4fb583;
+  --primary-dark: #3a9a6b;
+  --primary-soft: #1d2f26;
+  --accent: #e5a550;
+  --danger: #ff6b82;
+  --border: #36302a;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 25px 60px rgba(0, 0, 0, 0.7);
+}
+
+/* =========================================================
+   2. RESET VA ASOSIY STILLAR
+   ========================================================= */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  transition: background 0.3s var(--ease), color 0.3s var(--ease);
+  overflow-x: hidden;
+}
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+ul { list-style: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; border: none; background: none; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+h1, h2, h3, h4 { font-family: var(--font-head); line-height: 1.2; }
+
+.container { width: min(1200px, 100% - 40px); margin-inline: auto; }
+.eyebrow { display: inline-block; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+
+/* =========================================================
+   3. TUGMALAR
+   ========================================================= */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 13px 26px; border-radius: 999px; font-weight: 600; font-size: 0.95rem;
+  transition: transform 0.2s var(--ease), box-shadow 0.2s, background 0.2s, color 0.2s;
+}
+.btn:active { transform: scale(0.96); }
+.btn-primary { background: var(--primary); color: #fff; box-shadow: 0 8px 20px rgba(47, 111, 79, 0.35); }
+.btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+.btn-outline { border: 2px solid var(--border); background: var(--surface); }
+.btn-outline:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-2px); }
+.btn-sm { padding: 9px 18px; font-size: 0.85rem; }
+.btn-block { width: 100%; }
+
+/* =========================================================
+   4. HEADER
+   ========================================================= */
+.header {
+  position: sticky; top: 0; z-index: 100; height: var(--header-h);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.header.scrolled { border-color: var(--border); box-shadow: var(--shadow-sm); }
+.header-inner { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.logo { display: flex; align-items: center; gap: 10px; font-family: var(--font-head); font-size: 1.5rem; font-weight: 800; }
+.logo-mark { width: 38px; height: 38px; border-radius: 11px; background: linear-gradient(135deg, var(--primary), var(--accent)); display: grid; place-items: center; color: #fff; box-shadow: var(--shadow-sm); }
+.logo span em { font-style: normal; color: var(--primary); }
+.nav { display: flex; align-items: center; gap: 6px; }
+.nav a { padding: 8px 16px; border-radius: 999px; font-weight: 500; font-size: 0.95rem; color: var(--muted); transition: all 0.2s; }
+.nav a:hover { color: var(--text); background: var(--surface-2); }
+.nav a.active { color: var(--primary); background: var(--primary-soft); font-weight: 600; }
+.header-actions { display: flex; align-items: center; gap: 8px; }
+.icon-btn {
+  position: relative; width: 44px; height: 44px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--surface); border: 1px solid var(--border);
+  transition: transform 0.2s, background 0.2s, border-color 0.2s;
+}
+.icon-btn:hover { transform: translateY(-2px); border-color: var(--primary); color: var(--primary); }
+.icon-btn svg { width: 20px; height: 20px; }
+.badge {
+  position: absolute; top: -4px; right: -4px; min-width: 20px; height: 20px; padding: 0 5px;
+  border-radius: 999px; background: var(--danger); color: #fff; font-size: 0.7rem; font-weight: 700;
+  display: grid; place-items: center; transform: scale(0); transition: transform 0.25s var(--ease);
+}
+.badge.show { transform: scale(1); }
+.theme-toggle .sun { display: none; }
+[data-theme="dark"] .theme-toggle .sun { display: block; }
+[data-theme="dark"] .theme-toggle .moon { display: none; }
+.burger { display: none; }
+
+/* =========================================================
+   5. SAHIFA SARLAVHASI
+   ========================================================= */
+.page-head { position: relative; padding: 56px 0 44px; overflow: hidden; background: var(--surface-2); border-bottom: 1px solid var(--border); }
+.page-head::before { content: ""; position: absolute; width: 360px; height: 360px; border-radius: 50%; background: var(--primary); opacity: 0.18; filter: blur(70px); top: -160px; right: -60px; }
+.page-head .container { position: relative; }
+.breadcrumb { display: flex; gap: 8px; font-size: 0.86rem; color: var(--muted); margin-bottom: 14px; }
+.breadcrumb a:hover { color: var(--primary); }
+.page-head h1 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 8px; }
+.page-head p { color: var(--muted); max-width: 560px; }
+
+/* =========================================================
+   6. KATALOG MAKETI
+   ========================================================= */
+.shop { padding: 40px 0 80px; }
+.shop-layout { display: grid; grid-template-columns: 280px 1fr; gap: 32px; align-items: start; }
+
+.sidebar {
+  position: sticky; top: calc(var(--header-h) + 20px); background: var(--surface);
+  border: 1px solid var(--border); border-radius: var(--radius); padding: 22px;
+  max-height: calc(100vh - var(--header-h) - 40px); overflow-y: auto;
+}
+.sidebar-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.sidebar-head h3 { font-family: var(--font-body); font-size: 1.05rem; font-weight: 700; }
+.reset-btn { font-size: 0.84rem; color: var(--danger); font-weight: 600; }
+.reset-btn:hover { text-decoration: underline; }
+.close-filters { display: none; width: 36px; height: 36px; border-radius: 50%; background: var(--surface-2); font-size: 1.3rem; }
+.filter-group { padding: 18px 0; border-bottom: 1px solid var(--border); }
+.filter-group:last-of-type { border-bottom: none; }
+.filter-group h4 { font-family: var(--font-body); font-size: 0.9rem; font-weight: 700; margin-bottom: 12px; }
+.check { display: flex; align-items: center; gap: 10px; padding: 6px 0; cursor: pointer; font-size: 0.93rem; }
+.check input { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0; }
+.check .cnt { margin-left: auto; font-size: 0.78rem; color: var(--muted); background: var(--surface-2); padding: 1px 9px; border-radius: 999px; }
+.price-row { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.price-row input {
+  width: 100%; min-width: 0; padding: 9px 12px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: var(--bg); font-size: 0.88rem; outline: none;
+}
+.price-row input:focus { border-color: var(--primary); }
+.price-row span { color: var(--muted); }
+.range { width: 100%; accent-color: var(--primary); cursor: pointer; }
+.range-labels { display: flex; justify-content: space-between; font-size: 0.76rem; color: var(--muted); margin-top: 4px; }
+.radio-list label { display: flex; align-items: center; gap: 10px; padding: 6px 0; cursor: pointer; font-size: 0.92rem; }
+.radio-list input { accent-color: var(--primary); width: 17px; height: 17px; }
+.radio-list i { font-style: normal; color: #f2b01e; letter-spacing: 1px; }
+
+.toolbar {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 18px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px;
+}
+.search-box { position: relative; flex: 1 1 240px; }
+.search-box svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--muted); pointer-events: none; }
+.search-box input {
+  width: 100%; padding: 11px 40px 11px 42px; border-radius: 999px; border: 1px solid var(--border);
+  background: var(--bg); outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+}
+.search-box input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-soft); }
+.search-clear { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); width: 28px; height: 28px; border-radius: 50%; font-size: 1.1rem; color: var(--muted); display: none; }
+.search-clear.show { display: block; }
+.search-clear:hover { background: var(--surface-2); }
+.select {
+  padding: 11px 36px 11px 16px; border-radius: 999px; border: 1px solid var(--border); background: var(--bg);
+  outline: none; cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center;
+}
+.select:focus { border-color: var(--primary); }
+.view-toggle { display: flex; border: 1px solid var(--border); border-radius: 999px; overflow: hidden; }
+.view-toggle button { width: 42px; height: 42px; display: grid; place-items: center; color: var(--muted); transition: all 0.2s; }
+.view-toggle button.active { background: var(--primary); color: #fff; }
+.view-toggle svg { width: 18px; height: 18px; }
+.filter-open { display: none; }
+
+.result-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+.result-count { color: var(--muted); font-size: 0.92rem; }
+.result-count b { color: var(--text); }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip { display: inline-flex; align-items: center; gap: 8px; padding: 5px 8px 5px 14px; border-radius: 999px; background: var(--primary-soft); color: var(--primary); font-size: 0.82rem; font-weight: 600; }
+.chip button { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; font-size: 0.95rem; line-height: 1; background: rgba(0, 0, 0, 0.08); }
+.chip button:hover { background: var(--danger); color: #fff; }
+
+/* =========================================================
+   7. KITOB KARTALARI (grid va list)
+   ========================================================= */
+.book-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 22px; }
+.card {
+  position: relative; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px; cursor: pointer; display: flex; flex-direction: column;
+  transition: transform 0.3s var(--ease), box-shadow 0.3s, border-color 0.3s;
+  animation: cardIn 0.5s var(--ease) both;
+}
+.card:hover { transform: translateY(-8px); box-shadow: var(--shadow-md); border-color: var(--primary); }
+@keyframes cardIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+.cover {
+  position: relative; aspect-ratio: 3 / 4; border-radius: 4px 12px 12px 4px; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: space-between; padding: 18px 16px 16px 24px;
+  color: #fff; box-shadow: 0 10px 22px rgba(0, 0, 0, 0.25); transition: transform 0.4s var(--ease);
+}
+.cover::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 10px; background: linear-gradient(90deg, rgba(0,0,0,0.35), rgba(255,255,255,0.12)); }
+.cover::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 80% 10%, rgba(255,255,255,0.25), transparent 55%); pointer-events: none; }
+.card:hover .cover { transform: scale(1.04) rotate(-1.5deg); }
+.cover-title { font-family: var(--font-head); font-weight: 700; font-size: 1.1rem; line-height: 1.2; position: relative; z-index: 1; text-shadow: 0 2px 6px rgba(0,0,0,0.3); }
+.cover-author { font-size: 0.74rem; opacity: 0.9; position: relative; z-index: 1; letter-spacing: 0.04em; text-transform: uppercase; }
+.card-body { padding-top: 16px; display: flex; flex-direction: column; flex: 1; gap: 4px; min-width: 0; }
+.card-cat { font-size: 0.74rem; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; }
+.card-title { font-family: var(--font-body); font-weight: 600; font-size: 1.02rem; line-height: 1.35; }
+.card-author { color: var(--muted); font-size: 0.88rem; }
+.card-desc { display: none; color: var(--muted); font-size: 0.9rem; margin: 6px 0; }
+.stars { display: inline-flex; align-items: center; gap: 6px; font-size: 0.82rem; color: var(--muted); margin: 4px 0; }
+.stars i { font-style: normal; color: #f2b01e; letter-spacing: 1px; }
+.card-foot { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 12px; gap: 8px; }
+.price { font-weight: 700; font-size: 1.05rem; color: var(--primary); }
+.price s { display: block; font-weight: 400; font-size: 0.78rem; color: var(--muted); }
+.add-btn { width: 42px; height: 42px; border-radius: 50%; background: var(--primary); color: #fff; display: grid; place-items: center; transition: transform 0.2s, background 0.2s; flex-shrink: 0; }
+.add-btn:hover { background: var(--primary-dark); transform: scale(1.12); }
+.add-btn svg { width: 19px; height: 19px; }
+.fav-btn {
+  position: absolute; top: 24px; right: 24px; z-index: 3; width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92); color: #555; display: grid; place-items: center;
+  box-shadow: var(--shadow-sm); transition: transform 0.2s, color 0.2s;
+}
+.fav-btn:hover { transform: scale(1.15); }
+.fav-btn svg { width: 18px; height: 18px; }
+.fav-btn.active { color: var(--danger); }
+.fav-btn.active svg { fill: currentColor; }
+.tag { position: absolute; top: 24px; left: 28px; z-index: 3; background: var(--danger); color: #fff; font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+
+/* List ko'rinishi */
+.book-grid.list { grid-template-columns: 1fr; gap: 16px; }
+.book-grid.list .card { flex-direction: row; gap: 22px; align-items: stretch; }
+.book-grid.list .cover { width: 130px; flex-shrink: 0; aspect-ratio: 3 / 4; padding: 12px 10px 10px 18px; }
+.book-grid.list .cover-title { font-size: 0.9rem; }
+.book-grid.list .card-body { padding-top: 4px; }
+.book-grid.list .card-desc { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.book-grid.list .fav-btn { top: 16px; right: 16px; }
+.book-grid.list .tag { top: 24px; left: 24px; }
+
+/* Bo'sh holat */
+.empty { text-align: center; padding: 70px 20px; background: var(--surface); border: 1px dashed var(--border); border-radius: var(--radius); }
+.empty .big { font-size: 3.4rem; margin-bottom: 10px; }
+.empty h3 { font-size: 1.5rem; margin-bottom: 8px; }
+.empty p { color: var(--muted); margin-bottom: 20px; }
+
+/* Pagination */
+.pagination { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 40px; flex-wrap: wrap; }
+.page-btn {
+  min-width: 44px; height: 44px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--border);
+  background: var(--surface); font-weight: 600; transition: all 0.2s; display: grid; place-items: center;
+}
+.page-btn:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); transform: translateY(-2px); }
+.page-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+.page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.dots { color: var(--muted); padding: 0 4px; }
+
+/* =========================================================
+   8. FOOTER
+   ========================================================= */
+.footer { background: var(--surface); border-top: 1px solid var(--border); padding: 64px 0 24px; }
+.footer-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.2fr; gap: 40px; margin-bottom: 40px; }
+.footer p.about { color: var(--muted); margin: 14px 0 18px; font-size: 0.92rem; max-width: 300px; }
+.footer h4 { font-family: var(--font-body); font-size: 1rem; font-weight: 700; margin-bottom: 16px; }
+.footer li { margin-bottom: 10px; }
+.footer li a { color: var(--muted); font-size: 0.92rem; transition: color 0.2s, padding 0.2s; }
+.footer li a:hover { color: var(--primary); padding-left: 4px; }
+.socials { display: flex; gap: 10px; }
+.socials a { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--surface-2); font-weight: 700; font-size: 0.85rem; transition: all 0.2s; }
+.socials a:hover { background: var(--primary); color: #fff; transform: translateY(-3px); }
+.footer-bottom { border-top: 1px solid var(--border); padding-top: 22px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; color: var(--muted); font-size: 0.86rem; }
+
+/* =========================================================
+   9. MODAL, TOAST, TO-TOP, FILTER FONI
+   ========================================================= */
+.overlay { position: fixed; inset: 0; z-index: 300; background: rgba(10, 8, 6, 0.65); backdrop-filter: blur(4px); display: grid; place-items: center; padding: 20px; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+.overlay.open { opacity: 1; visibility: visible; }
+.modal { position: relative; width: min(860px, 100%); max-height: 92vh; overflow-y: auto; background: var(--surface); border-radius: 24px; box-shadow: var(--shadow-lg); display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 34px; padding: 36px; transform: translateY(30px) scale(0.96); transition: transform 0.35s var(--ease); }
+.overlay.open .modal { transform: none; }
+.modal-close { position: absolute; top: 14px; right: 14px; width: 40px; height: 40px; border-radius: 50%; background: var(--surface-2); display: grid; place-items: center; font-size: 1.3rem; z-index: 5; transition: transform 0.2s, background 0.2s; }
+.modal-close:hover { transform: rotate(90deg); background: var(--danger); color: #fff; }
+.modal .cover { align-self: start; }
+.modal .cover-title { font-size: 1.5rem; }
+.modal-info h2 { font-size: 1.9rem; margin: 6px 0 4px; }
+.modal-author { color: var(--muted); margin-bottom: 12px; }
+.modal-desc { color: var(--muted); margin: 14px 0 18px; }
+.meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+.meta div { background: var(--surface-2); border-radius: var(--radius-sm); padding: 10px 12px; text-align: center; }
+.meta b { display: block; font-size: 0.98rem; }
+.meta small { color: var(--muted); font-size: 0.74rem; }
+.modal-price { display: flex; align-items: baseline; gap: 12px; margin-bottom: 18px; }
+.modal-price .now { font-family: var(--font-head); font-size: 2rem; font-weight: 700; color: var(--primary); }
+.modal-price s { color: var(--muted); }
+.modal-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.qty { display: inline-flex; align-items: center; border: 1px solid var(--border); border-radius: 999px; overflow: hidden; }
+.qty button { width: 40px; height: 44px; font-size: 1.2rem; transition: background 0.2s; }
+.qty button:hover { background: var(--surface-2); }
+.qty span { min-width: 34px; text-align: center; font-weight: 600; }
+.modal-fav { width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--border); display: grid; place-items: center; transition: all 0.2s; }
+.modal-fav:hover { border-color: var(--danger); color: var(--danger); }
+.modal-fav.active { color: var(--danger); border-color: var(--danger); }
+.modal-fav.active svg { fill: currentColor; }
+.modal-fav svg { width: 22px; height: 22px; }
+
+.toast-wrap { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 400; display: flex; flex-direction: column; gap: 10px; align-items: center; pointer-events: none; }
+.toast { background: var(--text); color: var(--bg); padding: 12px 22px; border-radius: 999px; font-size: 0.92rem; font-weight: 500; box-shadow: var(--shadow-md); animation: toastIn 0.35s var(--ease) both; }
+.toast.out { animation: toastOut 0.3s forwards; }
+@keyframes toastIn { from { opacity: 0; transform: translateY(20px) scale(0.9); } to { opacity: 1; transform: none; } }
+@keyframes toastOut { to { opacity: 0; transform: translateY(10px); } }
+
+.to-top { position: fixed; right: 24px; bottom: 24px; z-index: 90; width: 48px; height: 48px; border-radius: 50%; background: var(--primary); color: #fff; display: grid; place-items: center; box-shadow: var(--shadow-md); opacity: 0; visibility: hidden; transform: translateY(20px); transition: all 0.3s var(--ease); }
+.to-top.show { opacity: 1; visibility: visible; transform: none; }
+.to-top:hover { background: var(--primary-dark); }
+
+.filter-back { position: fixed; inset: 0; z-index: 190; background: rgba(10, 8, 6, 0.55); opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+.filter-back.open { opacity: 1; visibility: visible; }
+
+/* =========================================================
+   10. RESPONSIVE
+   ========================================================= */
+@media (max-width: 992px) {
+  .shop-layout { grid-template-columns: 1fr; }
+  .filter-open { display: inline-flex; }
+  .sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0; z-index: 200; width: min(340px, 88vw); max-height: none;
+    border-radius: 0 var(--radius) var(--radius) 0; transform: translateX(-105%); transition: transform 0.35s var(--ease);
+  }
+  .sidebar.open { transform: none; box-shadow: var(--shadow-lg); }
+  .close-filters { display: grid; place-items: center; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 820px) {
+  .burger { display: grid; }
+  .nav {
+    position: fixed; top: var(--header-h); left: 0; right: 0; flex-direction: column; align-items: stretch;
+    background: var(--bg); border-bottom: 1px solid var(--border); padding: 14px 20px 22px; gap: 4px;
+    transform: translateY(-120%); transition: transform 0.35s var(--ease); box-shadow: var(--shadow-md);
+  }
+  .nav.open { transform: none; }
+  .nav a { padding: 13px 16px; }
+}
+@media (max-width: 640px) {
+  .page-head { padding: 40px 0 32px; }
+  .modal { grid-template-columns: 1fr; padding: 24px 20px; gap: 22px; }
+  .modal .cover { max-width: 220px; margin-inline: auto; }
+  .book-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .card { padding: 10px; }
+  .fav-btn { top: 16px; right: 16px; width: 34px; height: 34px; }
+  .tag { top: 16px; left: 18px; }
+  .book-grid.list .card { gap: 12px; }
+  .book-grid.list .cover { width: 96px; }
+  .book-grid.list .card-desc { display: none; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .logo span { font-size: 1.25rem; }
+  .icon-btn { width: 40px; height: 40px; }
+  .toolbar { gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================ HEADER ============================ -->
+<header class="header" id="header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo" aria-label="BookNest bosh sahifa">
+      <div class="logo-mark">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      </div>
+      <span>Book<em>Nest</em></span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Asosiy menyu">
+      <a href="index.html">Bosh sahifa</a>
+      <a href="products.html" class="active">Kitoblar</a>
+      <a href="about.html">Biz haqimizda</a>
+      <a href="favorites.html">Izbrini</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="icon-btn theme-toggle" id="themeToggle" aria-label="Mavzuni almashtirish" title="Dark / Light">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <a href="favorites.html" class="icon-btn" aria-label="Izbrini kitoblar" title="Izbrini">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+        <span class="badge" id="favCount">0</span>
+      </a>
+      <a href="cart.html" class="icon-btn" aria-label="Savatcha" title="Savatcha">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+        <span class="badge" id="cartCount">0</span>
+      </a>
+      <button class="icon-btn burger" id="burger" aria-label="Menyuni ochish" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- ============================ SAHIFA SARLAVHASI ============================ -->
+<section class="page-head">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="index.html">Bosh sahifa</a><span>/</span><span>Kitoblar</span>
+    </nav>
+    <span class="eyebrow">Katalog</span>
+    <h1>Barcha kitoblar</h1>
+    <p>O'zingizga yoqqan kitobni toping: qidiring, filtrlang va narx bo'yicha saralang.</p>
+  </div>
+</section>
+
+<!-- ============================ KATALOG ============================ -->
+<section class="shop">
+  <div class="container shop-layout">
+
+    <!-- ----- Filtrlar paneli ----- -->
+    <aside class="sidebar" id="sidebar" aria-label="Filtrlar">
+      <div class="sidebar-head">
+        <h3>Filtrlar</h3>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button class="reset-btn" id="resetBtn" type="button">Tozalash</button>
+          <button class="close-filters" id="closeFilters" type="button" aria-label="Yopish">×</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <h4>Kategoriya</h4>
+        <div id="catFilter"></div>
+      </div>
+
+      <div class="filter-group">
+        <h4>Narx (so'm)</h4>
+        <div class="price-row">
+          <input type="number" id="minPrice" min="0" step="1000" placeholder="dan" aria-label="Minimal narx">
+          <span>—</span>
+          <input type="number" id="maxPrice" min="0" step="1000" placeholder="gacha" aria-label="Maksimal narx">
+        </div>
+        <input type="range" class="range" id="priceRange" aria-label="Maksimal narx slayderi">
+        <div class="range-labels"><span id="rangeMin">0</span><span id="rangeMax">0</span></div>
+      </div>
+
+      <div class="filter-group">
+        <h4>Reyting</h4>
+        <div class="radio-list" id="ratingFilter">
+          <label><input type="radio" name="rating" value="0" checked> Barchasi</label>
+          <label><input type="radio" name="rating" value="4.5"> <i>★★★★★</i> 4.5 va undan yuqori</label>
+          <label><input type="radio" name="rating" value="4"> <i>★★★★☆</i> 4.0 va undan yuqori</label>
+          <label><input type="radio" name="rating" value="3"> <i>★★★☆☆</i> 3.0 va undan yuqori</label>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <h4>Qo'shimcha</h4>
+        <label class="check"><input type="checkbox" id="onlyDiscount"> Faqat chegirmadagilar</label>
+        <label class="check"><input type="checkbox" id="onlyNew"> Faqat yangi kitoblar</label>
+      </div>
+
+      <button class="btn btn-primary btn-block" id="applyBtn" type="button">Natijalarni ko'rish</button>
+    </aside>
+
+    <!-- ----- Asosiy qism ----- -->
+    <div class="content">
+      <div class="toolbar">
+        <button class="btn btn-outline btn-sm filter-open" id="openFilters" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
+          Filtr
+        </button>
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input type="search" id="searchInput" placeholder="Kitob, muallif yoki kategoriya..." aria-label="Qidiruv" autocomplete="off">
+          <button class="search-clear" id="searchClear" type="button" aria-label="Tozalash">×</button>
+        </div>
+        <select class="select" id="sortSelect" aria-label="Saralash">
+          <option value="popular">Ommabop</option>
+          <option value="price-asc">Narx: arzondan qimmatga</option>
+          <option value="price-desc">Narx: qimmatdan arzonga</option>
+          <option value="rating">Reyting bo'yicha</option>
+          <option value="newest">Eng yangilari</option>
+          <option value="discount">Chegirma bo'yicha</option>
+          <option value="title">Nomi: A–Z</option>
+        </select>
+        <div class="view-toggle" role="group" aria-label="Ko'rinish">
+          <button type="button" id="viewGrid" class="active" aria-label="Katak ko'rinish">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          </button>
+          <button type="button" id="viewList" aria-label="Ro'yxat ko'rinish">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="result-bar">
+        <div class="result-count" id="resultCount" aria-live="polite"></div>
+        <div class="chips" id="chips"></div>
+      </div>
+
+      <div class="book-grid" id="bookGrid"></div>
+      <nav class="pagination" id="pagination" aria-label="Sahifalar"></nav>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ============================ FOOTER ============================ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="logo"><div class="logo-mark">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div><span>Book<em>Nest</em></span></a>
+        <p class="about">Kitobni sevuvchilar uchun yaratilgan onlayn do'kon. Bilim — eng yaxshi sarmoya.</p>
+        <div class="socials">
+          <a href="#" aria-label="Telegram">TG</a>
+          <a href="#" aria-label="Instagram">IG</a>
+          <a href="#" aria-label="Facebook">FB</a>
+          <a href="#" aria-label="YouTube">YT</a>
+        </div>
+      </div>
+      <div>
+        <h4>Do'kon</h4>
+        <ul>
+          <li><a href="products.html">Barcha kitoblar</a></li>
+          <li><a href="favorites.html">Izbrini</a></li>
+          <li><a href="cart.html">Savatcha</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Kompaniya</h4>
+        <ul>
+          <li><a href="about.html">Biz haqimizda</a></li>
+          <li><a href="about.html#faq">Ko'p so'raladigan savollar</a></li>
+          <li><a href="about.html#contact">Aloqa</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Bog'lanish</h4>
+        <ul>
+          <li><a href="tel:+998901234567">+998 90 123 45 67</a></li>
+          <li><a href="mailto:info@booknest.uz">info@booknest.uz</a></li>
+          <li><a href="#">Toshkent, Amir Temur ko'chasi, 15</a></li>
+          <li><a href="#">Har kuni: 09:00 – 21:00</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span id="year">2026</span> BookNest. Barcha huquqlar himoyalangan.</span>
+      <span>Kitob bilan yashang 📖</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================ MODAL / TOAST / TO-TOP ============================ -->
+<div class="filter-back" id="filterBack"></div>
+
+<div class="overlay" id="overlay" aria-hidden="true">
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <button class="modal-close" id="modalClose" aria-label="Yopish">×</button>
+    <div class="cover" id="mCover"><div class="cover-title" id="mCoverTitle"></div><div class="cover-author" id="mCoverAuthor"></div></div>
+    <div class="modal-info">
+      <span class="card-cat" id="mCat"></span>
+      <h2 id="mTitle"></h2>
+      <div class="modal-author" id="mAuthor"></div>
+      <div class="stars" id="mStars"></div>
+      <p class="modal-desc" id="mDesc"></p>
+      <div class="meta">
+        <div><b id="mPages">—</b><small>Sahifa</small></div>
+        <div><b id="mYear">—</b><small>Yil</small></div>
+        <div><b id="mLang">—</b><small>Til</small></div>
+      </div>
+      <div class="modal-price"><span class="now" id="mPrice"></span><s id="mOld"></s></div>
+      <div class="modal-actions">
+        <div class="qty"><button id="qMinus" aria-label="Kamaytirish">−</button><span id="qVal">1</span><button id="qPlus" aria-label="Ko'paytirish">+</button></div>
+        <button class="btn btn-primary" id="mAdd">Savatga qo'shish</button>
+        <button class="modal-fav" id="mFav" aria-label="Izbriniga qo'shish">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
+<button class="to-top" id="toTop" aria-label="Tepaga qaytish">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+</button>
+
+<script>
+/* =========================================================
+   JS — BookNest (products.html)
+   ========================================================= */
+"use strict";
+
+/* ---------- 1. Ma'lumotlar (1–12 index.html bilan bir xil) ---------- */
+const BOOKS = [
+  { id: 1,  title: "O'tkan kunlar", author: "Abdulla Qodiriy", category: "Badiiy", price: 68000, old: 85000, rating: 4.9, votes: 1240, pages: 384, year: 2022, lang: "O'zbek", isNew: false, colors: ["#2f6f4f", "#143a28"], desc: "O'zbek adabiyotining birinchi romani. Otabek va Kumushbibining pok muhabbati, o'sha davrning ijtimoiy hayoti va urf-odatlari go'zal badiiy tasvirda aks etgan." },
+  { id: 2,  title: "Mehrobdan chayon", author: "Abdulla Qodiriy", category: "Badiiy", price: 59000, old: 0, rating: 4.7, votes: 640, pages: 320, year: 2021, lang: "O'zbek", isNew: false, colors: ["#8a4b2a", "#4a2310"], desc: "Xon saroyidagi fitnalar, adolat va zulm to'qnashuvi haqidagi tarixiy roman. Qodiriyning ikkinchi buyuk asari." },
+  { id: 3,  title: "Sariq devni minib", author: "X. To'xtaboyev", category: "Bolalar", price: 45000, old: 55000, rating: 4.8, votes: 980, pages: 288, year: 2023, lang: "O'zbek", isNew: true, colors: ["#d9a323", "#8a5a05"], desc: "Hamma yoshdagi kitobxonlarning sevimli sarguzasht asari. Qiziqarli voqealar, hazil va mehr bilan to'la hikoya." },
+  { id: 4,  title: "Dunyoning ishlari", author: "O'tkir Hoshimov", category: "Badiiy", price: 52000, old: 0, rating: 4.9, votes: 1510, pages: 256, year: 2022, lang: "O'zbek", isNew: false, colors: ["#3d6d8a", "#1b3a4f"], desc: "Onaga, bolalikka va oddiy insoniy qadriyatlarga bag'ishlangan samimiy qissa. Har bir sahifasi yurakka yetib boradi." },
+  { id: 5,  title: "Atom odatlar", author: "James Clear", category: "Rivojlanish", price: 89000, old: 110000, rating: 4.8, votes: 2310, pages: 352, year: 2024, lang: "O'zbek", isNew: true, colors: ["#e07a2f", "#8c3d0a"], desc: "Kichik o'zgarishlar orqali katta natijalarga erishish haqida amaliy qo'llanma. Yomon odatlardan qutulish va yangilarini shakllantirish yo'li." },
+  { id: 6,  title: "Boy ota, kambag'al ota", author: "Robert Kiyosaki", category: "Biznes", price: 79000, old: 95000, rating: 4.6, votes: 1870, pages: 336, year: 2023, lang: "O'zbek", isNew: false, colors: ["#1f5f5b", "#0b2f2d"], desc: "Moliyaviy savodxonlik asoslari: pul uchun ishlash emas, pul sizga ishlashi uchun nima qilish kerak." },
+  { id: 7,  title: "Alkimyogar", author: "Paulo Coelho", category: "Badiiy", price: 64000, old: 0, rating: 4.7, votes: 2050, pages: 224, year: 2023, lang: "O'zbek", isNew: false, colors: ["#b8542a", "#5e2210"], desc: "Cho'pon bola Santyagoning o'z orzusi ortidan Misr ehromlari tomon sayohati haqidagi falsafiy ertak." },
+  { id: 8,  title: "Kichik shahzoda", author: "A. de Sent-Ekzyuperi", category: "Bolalar", price: 42000, old: 0, rating: 4.9, votes: 1720, pages: 128, year: 2022, lang: "O'zbek", isNew: false, colors: ["#4a6fb5", "#1f3566"], desc: "Katta yoshdagilar uchun yozilgan bolalar ertagi. Do'stlik, sadoqat va haqiqiy qadriyatlar haqida sodda va chuqur hikmat." },
+  { id: 9,  title: "Sapiens", author: "Yuval Noah Harari", category: "Tarix", price: 98000, old: 120000, rating: 4.8, votes: 1390, pages: 480, year: 2024, lang: "O'zbek", isNew: true, colors: ["#6b4c9a", "#32204f"], desc: "Insoniyatning qisqacha tarixi: ovchi-termachilardan tortib bugungi texnologik sivilizatsiyagacha bo'lgan buyuk yo'l." },
+  { id: 10, title: "1984", author: "George Orwell", category: "Badiiy", price: 61000, old: 0, rating: 4.7, votes: 1130, pages: 328, year: 2021, lang: "O'zbek", isNew: false, colors: ["#4a4a4a", "#151515"], desc: "Totalitar jamiyat va nazorat haqidagi antiutopiya. Bugungi kunda ham dolzarb bo'lgan ogohlantiruvchi roman." },
+  { id: 11, title: "Shaytanat", author: "Tohir Malik", category: "Badiiy", price: 72000, old: 88000, rating: 4.8, votes: 1460, pages: 512, year: 2023, lang: "O'zbek", isNew: true, colors: ["#7a1f2e", "#3b0c15"], desc: "Sovet davri haqidagi sarguzashtli va dramatik roman. Taqdirlar, sadoqat va xiyonat to'qnashuvi." },
+  { id: 12, title: "Nol dan bir ga", author: "Peter Thiel", category: "Biznes", price: 84000, old: 0, rating: 4.5, votes: 760, pages: 224, year: 2024, lang: "O'zbek", isNew: true, colors: ["#0f6b8a", "#073a4a"], desc: "Startaplar va yangiliklar yaratish haqida: kelajakni qanday qurish va raqobatsiz bozor topish mumkin." },
+  { id: 13, title: "Ikki eshik orasi", author: "O'tkir Hoshimov", category: "Badiiy", price: 76000, old: 90000, rating: 4.9, votes: 1680, pages: 560, year: 2022, lang: "O'zbek", isNew: false, colors: ["#5a3d2b", "#2a170c"], desc: "Yigirmanchi asr o'zbek xalqining og'ir va murakkab taqdirini aks ettiruvchi keng qamrovli roman." },
+  { id: 14, title: "Xamsa", author: "Alisher Navoiy", category: "Badiiy", price: 120000, old: 145000, rating: 4.9, votes: 540, pages: 720, year: 2021, lang: "O'zbek", isNew: false, colors: ["#8a6a1c", "#3e2d05"], desc: "Buyuk mutafakkirning besh dostondan iborat nodir asari. Sharq adabiyotining cho'qqisi." },
+  { id: 15, title: "Kecha va kunduz", author: "Abdulhamid Cho'lpon", category: "Badiiy", price: 66000, old: 0, rating: 4.8, votes: 870, pages: 400, year: 2023, lang: "O'zbek", isNew: false, colors: ["#3b5a4a", "#16271f"], desc: "Jadidlar davri, milliy uyg'onish va inson taqdirlari haqidagi chuqur ijtimoiy roman." },
+  { id: 16, title: "Temur tuzuklari", author: "Amir Temur", category: "Tarix", price: 58000, old: 70000, rating: 4.7, votes: 690, pages: 304, year: 2022, lang: "O'zbek", isNew: false, colors: ["#6d2f2f", "#2e1111"], desc: "Sohibqironning davlat boshqaruvi, harbiy san'at va adolat haqidagi o'gitlari to'plami." },
+  { id: 17, title: "Boburnoma", author: "Zahiriddin Bobur", category: "Tarix", price: 82000, old: 0, rating: 4.8, votes: 810, pages: 464, year: 2023, lang: "O'zbek", isNew: false, colors: ["#2d5a6b", "#10262e"], desc: "Bobur Mirzoning xotiralari: Farg'ona, Samarqand, Kobul va Hindiston voqealari jonli qalamda." },
+  { id: 18, title: "Jahon tarixi qisqacha", author: "E. H. Gombrich", category: "Tarix", price: 74000, old: 92000, rating: 4.6, votes: 520, pages: 352, year: 2024, lang: "O'zbek", isNew: true, colors: ["#7a5a2f", "#33230c"], desc: "Qadimgi davrlardan bugungi kungacha bo'lgan jahon tarixini sodda va qiziqarli bayon qiluvchi kitob." },
+  { id: 19, title: "Fikrla va boy bo'l", author: "Napoleon Hill", category: "Biznes", price: 69000, old: 0, rating: 4.6, votes: 1420, pages: 320, year: 2022, lang: "O'zbek", isNew: false, colors: ["#2b4a6b", "#0f1f30"], desc: "Muvaffaqiyatli insonlarning o'ylash tarzini o'rganib, boylikka erishish tamoyillari bayoni." },
+  { id: 20, title: "Lean startap", author: "Eric Ries", category: "Biznes", price: 87000, old: 105000, rating: 4.5, votes: 610, pages: 336, year: 2024, lang: "O'zbek", isNew: true, colors: ["#1a6b52", "#093326"], desc: "Yangi mahsulotni tez sinab ko'rish, xatolardan o'rganish va biznesni samarali yuritish usullari." },
+  { id: 21, title: "Binafsha sigir", author: "Seth Godin", category: "Biznes", price: 63000, old: 0, rating: 4.4, votes: 430, pages: 208, year: 2023, lang: "O'zbek", isNew: false, colors: ["#7a3d8a", "#34123d"], desc: "Raqobatda ajralib turish va mahsulotingizni e'tiborga loyiq qilish bo'yicha marketing qo'llanmasi." },
+  { id: 22, title: "Yuksak samaradorlik odatlari", author: "Stephen Covey", category: "Rivojlanish", price: 92000, old: 110000, rating: 4.7, votes: 1560, pages: 416, year: 2023, lang: "O'zbek", isNew: false, colors: ["#c9622b", "#6b2a0a"], desc: "Shaxsiy va kasbiy hayotda samarali bo'lishning yetti asosiy odati." },
+  { id: 23, title: "Chuqur ish", author: "Cal Newport", category: "Rivojlanish", price: 78000, old: 0, rating: 4.5, votes: 590, pages: 304, year: 2024, lang: "O'zbek", isNew: true, colors: ["#2f4858", "#0f1b22"], desc: "Chalg'ituvchi dunyoda diqqatni jamlab, qiyin vazifalarni sifatli bajarish san'ati." },
+  { id: 24, title: "Sir", author: "Rhonda Byrne", category: "Rivojlanish", price: 57000, old: 68000, rating: 4.2, votes: 1180, pages: 240, year: 2021, lang: "O'zbek", isNew: false, colors: ["#b2872b", "#5c4308"], desc: "Ijobiy fikrlash va maqsadga yo'naltirilgan fikr kuchi haqida mashhur kitob." },
+  { id: 25, title: "Tez va sekin fikrlash", author: "Daniel Kahneman", category: "Psixologiya", price: 96000, old: 118000, rating: 4.7, votes: 880, pages: 512, year: 2024, lang: "O'zbek", isNew: true, colors: ["#3a3f8a", "#14163d"], desc: "Inson ongining ikki tizimi va qaror qabul qilishdagi xatolar haqida Nobel mukofoti sohibining asari." },
+  { id: 26, title: "Inson ma'no izlaydi", author: "Viktor Frankl", category: "Psixologiya", price: 54000, old: 0, rating: 4.9, votes: 1340, pages: 192, year: 2022, lang: "O'zbek", isNew: false, colors: ["#4a5a3a", "#1d2614"], desc: "Konsentratsion lagerda omon qolgan psixiatrning hayot ma'nosi haqidagi teran mulohazalari." },
+  { id: 27, title: "Ta'sir psixologiyasi", author: "Robert Cialdini", category: "Psixologiya", price: 81000, old: 99000, rating: 4.6, votes: 740, pages: 368, year: 2023, lang: "O'zbek", isNew: false, colors: ["#8a3d5a", "#3d1526"], desc: "Odamlarni qaror qabul qilishga undovchi olti asosiy ta'sir tamoyili tahlili." },
+  { id: 28, title: "Odamlar o'yinlari", author: "Eric Berne", category: "Psixologiya", price: 62000, old: 0, rating: 4.4, votes: 380, pages: 288, year: 2022, lang: "O'zbek", isNew: false, colors: ["#5a4a8a", "#241a3d"], desc: "Kundalik muloqotdagi yashirin ssenariylar va munosabatlar psixologiyasi." },
+  { id: 29, title: "Mindset", author: "Carol Dweck", category: "Psixologiya", price: 73000, old: 0, rating: 4.5, votes: 650, pages: 288, year: 2024, lang: "O'zbek", isNew: true, colors: ["#d0703a", "#6e2f0e"], desc: "O'sishga yo'naltirilgan fikrlash tarzi muvaffaqiyatga qanday olib borishi haqida tadqiqot." },
+  { id: 30, title: "Vaqtning qisqacha tarixi", author: "Stephen Hawking", category: "Ilm-fan", price: 88000, old: 105000, rating: 4.7, votes: 920, pages: 256, year: 2023, lang: "O'zbek", isNew: false, colors: ["#1b2a5a", "#080e24"], desc: "Koinotning paydo bo'lishi, qora tuynuklar va vaqt tabiati haqida sodda tilda bayon." },
+  { id: 31, title: "Xudbin gen", author: "Richard Dawkins", category: "Ilm-fan", price: 79000, old: 0, rating: 4.5, votes: 470, pages: 360, year: 2022, lang: "O'zbek", isNew: false, colors: ["#3f6b2f", "#18290f"], desc: "Evolyutsiyaga genlar nuqtai nazaridan qarash va hayotning ichki mexanizmlari." },
+  { id: 32, title: "Kosmos", author: "Carl Sagan", category: "Ilm-fan", price: 94000, old: 115000, rating: 4.8, votes: 560, pages: 432, year: 2024, lang: "O'zbek", isNew: true, colors: ["#142a4a", "#050b17"], desc: "Olamning ulug'vorligi va insonning undagi o'rni haqida ilhomlantiruvchi sayohat." },
+  { id: 33, title: "Garri Potter va falsafiy tosh", author: "J. K. Rowling", category: "Bolalar", price: 68000, old: 80000, rating: 4.9, votes: 2240, pages: 336, year: 2023, lang: "O'zbek", isNew: false, colors: ["#6b1d1d", "#2b0808"], desc: "Yetim bola o'zining sehrgar ekanini bilib, sehrgarlik maktabida sarguzashtlarga sho'ng'iydi." },
+  { id: 34, title: "Pippi Uzunchorap", author: "Astrid Lindgren", category: "Bolalar", price: 47000, old: 0, rating: 4.7, votes: 710, pages: 176, year: 2022, lang: "O'zbek", isNew: false, colors: ["#d65a3a", "#7a1f0a"], desc: "Dunyodagi eng kuchli qizcha Pippining kulgili va quvnoq sarguzashtlari." },
+  { id: 35, title: "Tom Soyerning sarguzashtlari", author: "Mark Twain", category: "Bolalar", price: 49000, old: 58000, rating: 4.6, votes: 830, pages: 256, year: 2021, lang: "O'zbek", isNew: false, colors: ["#4f7a3a", "#1c3010"], desc: "Missisipi daryosi bo'yidagi sho'x bola Tomning hazilga boy va qiziqarli kunlari." },
+  { id: 36, title: "Jinoyat va jazo", author: "Fyodor Dostoyevskiy", category: "Badiiy", price: 85000, old: 0, rating: 4.8, votes: 990, pages: 576, year: 2023, lang: "O'zbek", isNew: false, colors: ["#3d3d4f", "#14141c"], desc: "Raskolnikovning ichki kurashi, vijdon azobi va insoniy tavba haqidagi psixologik roman." },
+  { id: 37, title: "Urush va tinchlik", author: "Lev Tolstoy", category: "Badiiy", price: 135000, old: 160000, rating: 4.7, votes: 610, pages: 960, year: 2022, lang: "O'zbek", isNew: false, colors: ["#5a4a2f", "#231c0c"], desc: "Napoleon bosqini davridagi Rossiya jamiyati va insonlar taqdirini tasvirlovchi epik asar." },
+  { id: 38, title: "Chol va dengiz", author: "Ernest Hemingway", category: "Badiiy", price: 44000, old: 0, rating: 4.6, votes: 1020, pages: 128, year: 2023, lang: "O'zbek", isNew: false, colors: ["#2a6b8a", "#0d2d3d"], desc: "Keksa baliqchining ulkan baliq bilan olishuvi: matonat va g'urur haqida qissa." },
+  { id: 39, title: "Uch og'ayni botirlar", author: "Aleksandr Dyuma", category: "Badiiy", price: 78000, old: 92000, rating: 4.7, votes: 1090, pages: 624, year: 2021, lang: "O'zbek", isNew: false, colors: ["#6b2d5a", "#2a0f23"], desc: "D'Artanyan va uch mushketyorning qirol saroyidagi fitnalarga qarshi sarguzashtlari." },
+  { id: 40, title: "Robinzon Kruzo", author: "Daniel Defoe", category: "Badiiy", price: 53000, old: 0, rating: 4.5, votes: 770, pages: 320, year: 2022, lang: "O'zbek", isNew: false, colors: ["#2f6b6b", "#0f2b2b"], desc: "Kema halokatidan so'ng cho'l orolda omon qolgan odamning hayot uchun kurashi." }
+];
+
+/* ---------- 2. Yordamchi funksiyalar ---------- */
+const $ = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+const fmt = n => new Intl.NumberFormat("uz-UZ").format(n).replace(/\u00a0/g, " ") + " so'm";
+const findBook = id => BOOKS.find(b => b.id === Number(id));
+const stars = r => "★".repeat(Math.round(r)) + "☆".repeat(5 - Math.round(r));
+const discount = b => (b.old ? Math.round((1 - b.price / b.old) * 100) : 0);
+const norm = s => String(s).toLowerCase().replace(/[’ʻ‘`ʼ]/g, "'").trim();
+const debounce = (fn, ms = 250) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+
+/* ---------- 3. Saqlash (localStorage) ---------- */
+const Store = {
+  read(key, fallback) {
+    try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch (e) { return fallback; }
+  },
+  write(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* xotira bloklangan */ }
+  },
+  get cart() { return this.read("bn_cart", []); },
+  set cart(v) { this.write("bn_cart", v); },
+  get fav() { return this.read("bn_fav", []); },
+  set fav(v) { this.write("bn_fav", v); }
+};
+
+function addToCart(id, qty = 1) {
+  const cart = Store.cart;
+  const item = cart.find(i => i.id === id);
+  if (item) item.qty = Math.min(item.qty + qty, 99);
+  else cart.push({ id, qty });
+  Store.cart = cart;
+  updateBadges();
+  toast("🛒 “" + findBook(id).title + "” savatchaga qo'shildi");
+}
+
+function toggleFav(id) {
+  let fav = Store.fav;
+  const has = fav.includes(id);
+  fav = has ? fav.filter(x => x !== id) : [...fav, id];
+  Store.fav = fav;
+  updateBadges();
+  syncFavButtons(id);
+  toast(has ? "💔 Izbrinidan olib tashlandi" : "❤️ Izbriniga qo'shildi");
+}
+
+function syncFavButtons(id) {
+  const active = Store.fav.includes(id);
+  $$('.fav-btn[data-id="' + id + '"]').forEach(b => b.classList.toggle("active", active));
+  if (currentModalId === id) $("#mFav").classList.toggle("active", active);
+}
+
+function updateBadges() {
+  const cartQty = Store.cart.reduce((s, i) => s + i.qty, 0);
+  const favQty = Store.fav.length;
+  [["#cartCount", cartQty], ["#favCount", favQty]].forEach(([sel, n]) => {
+    const el = $(sel);
+    el.textContent = n > 99 ? "99+" : n;
+    el.classList.toggle("show", n > 0);
+  });
+}
+
+/* ---------- 4. Toast xabarlar ---------- */
+function toast(text) {
+  const el = document.createElement("div");
+  el.className = "toast";
+  el.textContent = text;
+  $("#toastWrap").appendChild(el);
+  setTimeout(() => {
+    el.classList.add("out");
+    el.addEventListener("animationend", () => el.remove());
+  }, 2400);
+}
+
+/* ---------- 5. Karta shabloni ---------- */
+function coverHTML(b) {
+  return '<div class="cover" style="background: linear-gradient(150deg, ' + b.colors[0] + ', ' + b.colors[1] + ');">' +
+    '<div class="cover-title">' + b.title + '</div>' +
+    '<div class="cover-author">' + b.author + '</div></div>';
+}
+
+function cardHTML(b, index) {
+  const d = discount(b);
+  const isFav = Store.fav.includes(b.id);
+  return '<article class="card" style="animation-delay:' + (index * 40) + 'ms" data-id="' + b.id + '" tabindex="0" role="button" aria-label="' + b.title + ' kitobini ochish">' +
+    (d ? '<span class="tag">-' + d + '%</span>' : (b.isNew ? '<span class="tag" style="background:var(--primary)">Yangi</span>' : '')) +
+    '<button class="fav-btn' + (isFav ? ' active' : '') + '" data-id="' + b.id + '" data-action="fav" aria-label="Izbriniga qo\'shish">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>' +
+    '</button>' +
+    coverHTML(b) +
+    '<div class="card-body">' +
+      '<span class="card-cat">' + b.category + '</span>' +
+      '<h3 class="card-title">' + b.title + '</h3>' +
+      '<span class="card-author">' + b.author + '</span>' +
+      '<p class="card-desc">' + b.desc + '</p>' +
+      '<div class="stars"><i>' + stars(b.rating) + '</i> ' + b.rating + ' (' + b.votes + ')</div>' +
+      '<div class="card-foot">' +
+        '<div class="price">' + fmt(b.price) + (b.old ? '<s>' + fmt(b.old) + '</s>' : '') + '</div>' +
+        '<button class="add-btn" data-id="' + b.id + '" data-action="cart" aria-label="Savatga qo\'shish">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>' +
+        '</button>' +
+      '</div>' +
+    '</div>' +
+  '</article>';
+}
+
+/* Kartadagi tugma va bosishlar (event delegation) */
+document.addEventListener("click", e => {
+  const actionBtn = e.target.closest("[data-action]");
+  if (actionBtn) {
+    e.stopPropagation();
+    const id = Number(actionBtn.dataset.id);
+    if (actionBtn.dataset.action === "cart") addToCart(id);
+    if (actionBtn.dataset.action === "fav") toggleFav(id);
+    return;
+  }
+  const card = e.target.closest(".card");
+  if (card) openModal(Number(card.dataset.id));
+});
+
+document.addEventListener("keydown", e => {
+  if ((e.key === "Enter" || e.key === " ") && e.target.classList && e.target.classList.contains("card")) {
+    e.preventDefault();
+    openModal(Number(e.target.dataset.id));
+  }
+  if (e.key === "Escape") { closeModal(); closeFilters(); }
+});
+
+/* ---------- 6. Modal ---------- */
+let currentModalId = null;
+let modalQty = 1;
+let lastFocus = null;
+
+function openModal(id) {
+  const b = findBook(id);
+  if (!b) return;
+  currentModalId = id;
+  modalQty = 1;
+  lastFocus = document.activeElement;
+
+  $("#mCover").style.background = "linear-gradient(150deg, " + b.colors[0] + ", " + b.colors[1] + ")";
+  $("#mCoverTitle").textContent = b.title;
+  $("#mCoverAuthor").textContent = b.author;
+  $("#mCat").textContent = b.category;
+  $("#mTitle").textContent = b.title;
+  $("#mAuthor").textContent = b.author;
+  $("#mStars").innerHTML = "<i>" + stars(b.rating) + "</i> " + b.rating + " (" + b.votes + " ovoz)";
+  $("#mDesc").textContent = b.desc;
+  $("#mPages").textContent = b.pages;
+  $("#mYear").textContent = b.year;
+  $("#mLang").textContent = b.lang;
+  $("#mPrice").textContent = fmt(b.price);
+  $("#mOld").textContent = b.old ? fmt(b.old) : "";
+  $("#qVal").textContent = modalQty;
+  $("#mFav").classList.toggle("active", Store.fav.includes(id));
+
+  const overlay = $("#overlay");
+  overlay.classList.add("open");
+  overlay.setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+  setTimeout(() => $("#modalClose").focus(), 50);
+}
+
+function closeModal() {
+  const overlay = $("#overlay");
+  if (!overlay.classList.contains("open")) return;
+  overlay.classList.remove("open");
+  overlay.setAttribute("aria-hidden", "true");
+  document.body.style.overflow = "";
+  currentModalId = null;
+  if (lastFocus) lastFocus.focus();
+}
+
+$("#modalClose").addEventListener("click", closeModal);
+$("#overlay").addEventListener("click", e => { if (e.target.id === "overlay") closeModal(); });
+$("#qMinus").addEventListener("click", () => { modalQty = Math.max(1, modalQty - 1); $("#qVal").textContent = modalQty; });
+$("#qPlus").addEventListener("click", () => { modalQty = Math.min(99, modalQty + 1); $("#qVal").textContent = modalQty; });
+$("#mAdd").addEventListener("click", () => { if (currentModalId) { addToCart(currentModalId, modalQty); closeModal(); } });
+$("#mFav").addEventListener("click", () => { if (currentModalId) toggleFav(currentModalId); });
+
+/* ---------- 7. Mavzu, header, burger ---------- */
+function setTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  try { localStorage.setItem("bn_theme", theme); } catch (e) {}
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute("content", theme === "dark" ? "#14110e" : "#2f6f4f");
+}
+$("#themeToggle").addEventListener("click", () => {
+  setTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");
+});
+
+const header = $("#header");
+const toTop = $("#toTop");
+window.addEventListener("scroll", () => {
+  header.classList.toggle("scrolled", window.scrollY > 10);
+  toTop.classList.toggle("show", window.scrollY > 600);
+}, { passive: true });
+toTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+
+$("#burger").addEventListener("click", function () {
+  const open = $("#nav").classList.toggle("open");
+  this.setAttribute("aria-expanded", open);
+});
+
+/* =========================================================
+   8. KATALOG: HOLAT, FILTR, SARALASH, PAGINATION
+   ========================================================= */
+const PAGE_SIZE = 12;
+const PRICE_MIN = Math.min(...BOOKS.map(b => b.price));
+const PRICE_MAX = Math.max(...BOOKS.map(b => b.price));
+const CATEGORIES = [...new Set(BOOKS.map(b => b.category))];
+
+const state = {
+  q: "",
+  cats: new Set(),
+  minPrice: null,
+  maxPrice: null,
+  rating: 0,
+  onlyDiscount: false,
+  onlyNew: false,
+  sort: "popular",
+  page: 1,
+  view: Store.read("bn_view", "grid")
+};
+
+/* --- URL parametrlarini o'qish / yozish --- */
+function readURL() {
+  const p = new URLSearchParams(location.search);
+  state.q = p.get("q") || "";
+  (p.get("cat") || "").split(",").filter(Boolean).forEach(c => {
+    const found = CATEGORIES.find(x => norm(x) === norm(c));
+    if (found) state.cats.add(found);
+  });
+  if (p.get("sort")) state.sort = p.get("sort");
+  const page = parseInt(p.get("page"), 10);
+  if (page > 0) state.page = page;
+}
+
+function writeURL() {
+  const p = new URLSearchParams();
+  if (state.q) p.set("q", state.q);
+  if (state.cats.size) p.set("cat", [...state.cats].join(","));
+  if (state.sort !== "popular") p.set("sort", state.sort);
+  if (state.page > 1) p.set("page", state.page);
+  const qs = p.toString();
+  try { history.replaceState(null, "", location.pathname + (qs ? "?" + qs : "")); } catch (e) {}
+}
+
+/* --- Filtrlash va saralash --- */
+function getFiltered() {
+  const q = norm(state.q);
+  let list = BOOKS.filter(b => {
+    if (q && !(norm(b.title).includes(q) || norm(b.author).includes(q) || norm(b.category).includes(q))) return false;
+    if (state.cats.size && !state.cats.has(b.category)) return false;
+    if (state.minPrice !== null && b.price < state.minPrice) return false;
+    if (state.maxPrice !== null && b.price > state.maxPrice) return false;
+    if (state.rating && b.rating < state.rating) return false;
+    if (state.onlyDiscount && !b.old) return false;
+    if (state.onlyNew && !b.isNew) return false;
+    return true;
+  });
+
+  const sorters = {
+    "popular": (a, b) => b.votes - a.votes,
+    "price-asc": (a, b) => a.price - b.price,
+    "price-desc": (a, b) => b.price - a.price,
+    "rating": (a, b) => b.rating - a.rating || b.votes - a.votes,
+    "newest": (a, b) => b.year - a.year || Number(b.isNew) - Number(a.isNew),
+    "discount": (a, b) => discount(b) - discount(a),
+    "title": (a, b) => a.title.localeCompare(b.title, "uz")
+  };
+  list.sort(sorters[state.sort] || sorters.popular);
+  return list;
+}
+
+/* --- Asosiy chizish --- */
+function render() {
+  const list = getFiltered();
+  const totalPages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
+  if (state.page > totalPages) state.page = totalPages;
+  const start = (state.page - 1) * PAGE_SIZE;
+  const pageItems = list.slice(start, start + PAGE_SIZE);
+
+  const grid = $("#bookGrid");
+  grid.classList.toggle("list", state.view === "list");
+
+  if (!list.length) {
+    grid.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="big">🔍</div>' +
+      '<h3>Hech narsa topilmadi</h3><p>Qidiruv yoki filtrlarni o\'zgartirib ko\'ring.</p>' +
+      '<button class="btn btn-primary" type="button" id="emptyReset">Filtrlarni tozalash</button></div>';
+    $("#emptyReset").addEventListener("click", resetAll);
+  } else {
+    grid.innerHTML = pageItems.map((b, i) => cardHTML(b, i)).join("");
+  }
+
+  $("#resultCount").innerHTML = list.length
+    ? "<b>" + list.length + "</b> ta kitobdan <b>" + (start + 1) + "–" + (start + pageItems.length) + "</b> ko'rsatilmoqda"
+    : "<b>0</b> ta natija";
+
+  renderChips();
+  renderPagination(totalPages);
+  renderCategoryFilter();
+  $("#searchClear").classList.toggle("show", !!state.q);
+  writeURL();
+}
+
+/* --- Faol filtrlar (chips) --- */
+function renderChips() {
+  const chips = [];
+  if (state.q) chips.push({ label: "Qidiruv: " + state.q, key: "q" });
+  state.cats.forEach(c => chips.push({ label: c, key: "cat", value: c }));
+  if (state.minPrice !== null) chips.push({ label: "Narx ≥ " + fmt(state.minPrice), key: "min" });
+  if (state.maxPrice !== null) chips.push({ label: "Narx ≤ " + fmt(state.maxPrice), key: "max" });
+  if (state.rating) chips.push({ label: "Reyting " + state.rating + "+", key: "rating" });
+  if (state.onlyDiscount) chips.push({ label: "Chegirmada", key: "discount" });
+  if (state.onlyNew) chips.push({ label: "Yangi", key: "new" });
+
+  $("#chips").innerHTML = chips.map(c =>
+    '<span class="chip">' + c.label.replace(/</g, "&lt;") +
+    '<button type="button" data-key="' + c.key + '"' + (c.value ? ' data-value="' + c.value + '"' : '') + ' aria-label="Olib tashlash">×</button></span>'
+  ).join("");
+}
+
+$("#chips").addEventListener("click", e => {
+  const btn = e.target.closest("button[data-key]");
+  if (!btn) return;
+  const key = btn.dataset.key;
+  if (key === "q") { state.q = ""; $("#searchInput").value = ""; }
+  if (key === "cat") state.cats.delete(btn.dataset.value);
+  if (key === "min") { state.minPrice = null; $("#minPrice").value = ""; }
+  if (key === "max") { state.maxPrice = null; $("#maxPrice").value = ""; $("#priceRange").value = PRICE_MAX; }
+  if (key === "rating") { state.rating = 0; $('input[name="rating"][value="0"]').checked = true; }
+  if (key === "discount") { state.onlyDiscount = false; $("#onlyDiscount").checked = false; }
+  if (key === "new") { state.onlyNew = false; $("#onlyNew").checked = false; }
+  state.page = 1;
+  render();
+});
+
+/* --- Kategoriya filtri --- */
+function renderCategoryFilter() {
+  $("#catFilter").innerHTML = CATEGORIES.map(c => {
+    const count = BOOKS.filter(b => b.category === c).length;
+    return '<label class="check"><input type="checkbox" value="' + c + '"' + (state.cats.has(c) ? " checked" : "") + '> ' + c +
+      '<span class="cnt">' + count + '</span></label>';
+  }).join("");
+}
+
+$("#catFilter").addEventListener("change", e => {
+  if (e.target.type !== "checkbox") return;
+  e.target.checked ? state.cats.add(e.target.value) : state.cats.delete(e.target.value);
+  state.page = 1;
+  render();
+});
+
+/* --- Pagination --- */
+function renderPagination(total) {
+  const nav = $("#pagination");
+  if (total <= 1) { nav.innerHTML = ""; return; }
+
+  const cur = state.page;
+  const pages = [];
+  for (let i = 1; i <= total; i++) {
+    if (i === 1 || i === total || Math.abs(i - cur) <= 1) pages.push(i);
+    else if (pages[pages.length - 1] !== "...") pages.push("...");
+  }
+
+  nav.innerHTML =
+    '<button class="page-btn" data-page="' + (cur - 1) + '"' + (cur === 1 ? " disabled" : "") + ' aria-label="Oldingi">←</button>' +
+    pages.map(p => p === "..."
+      ? '<span class="dots">…</span>'
+      : '<button class="page-btn' + (p === cur ? " active" : "") + '" data-page="' + p + '"' + (p === cur ? ' aria-current="page"' : "") + '>' + p + '</button>'
+    ).join("") +
+    '<button class="page-btn" data-page="' + (cur + 1) + '"' + (cur === total ? " disabled" : "") + ' aria-label="Keyingi">→</button>';
+}
+
+$("#pagination").addEventListener("click", e => {
+  const btn = e.target.closest("[data-page]");
+  if (!btn || btn.disabled) return;
+  state.page = Number(btn.dataset.page);
+  render();
+  window.scrollTo({ top: $(".shop").offsetTop - 20, behavior: "smooth" });
+});
+
+/* --- Qidiruv --- */
+const onSearch = debounce(() => {
+  state.q = $("#searchInput").value.trim();
+  state.page = 1;
+  render();
+}, 250);
+$("#searchInput").addEventListener("input", onSearch);
+$("#searchClear").addEventListener("click", () => {
+  $("#searchInput").value = "";
+  state.q = "";
+  state.page = 1;
+  render();
+  $("#searchInput").focus();
+});
+
+/* --- Saralash va ko'rinish --- */
+$("#sortSelect").addEventListener("change", e => { state.sort = e.target.value; state.page = 1; render(); });
+
+function setView(view) {
+  state.view = view;
+  Store.write("bn_view", view);
+  $("#viewGrid").classList.toggle("active", view === "grid");
+  $("#viewList").classList.toggle("active", view === "list");
+  render();
+}
+$("#viewGrid").addEventListener("click", () => setView("grid"));
+$("#viewList").addEventListener("click", () => setView("list"));
+
+/* --- Narx filtri --- */
+const minInput = $("#minPrice");
+const maxInput = $("#maxPrice");
+const range = $("#priceRange");
+
+range.min = PRICE_MIN;
+range.max = PRICE_MAX;
+range.step = 1000;
+range.value = PRICE_MAX;
+$("#rangeMin").textContent = fmt(PRICE_MIN);
+$("#rangeMax").textContent = fmt(PRICE_MAX);
+
+function readPrice(input) {
+  const v = parseInt(input.value, 10);
+  return Number.isFinite(v) && v >= 0 ? v : null;
+}
+
+const onPriceChange = debounce(() => {
+  state.minPrice = readPrice(minInput);
+  state.maxPrice = readPrice(maxInput);
+  if (state.minPrice !== null && state.maxPrice !== null && state.minPrice > state.maxPrice) {
+    [state.minPrice, state.maxPrice] = [state.maxPrice, state.minPrice];
+    minInput.value = state.minPrice;
+    maxInput.value = state.maxPrice;
+  }
+  range.value = state.maxPrice !== null ? state.maxPrice : PRICE_MAX;
+  state.page = 1;
+  render();
+}, 400);
+minInput.addEventListener("input", onPriceChange);
+maxInput.addEventListener("input", onPriceChange);
+range.addEventListener("input", () => {
+  const v = Number(range.value);
+  maxInput.value = v >= PRICE_MAX ? "" : v;
+  state.maxPrice = v >= PRICE_MAX ? null : v;
+  state.page = 1;
+  render();
+});
+
+/* --- Reyting va qo'shimcha filtrlar --- */
+$("#ratingFilter").addEventListener("change", e => {
+  state.rating = parseFloat(e.target.value) || 0;
+  state.page = 1;
+  render();
+});
+$("#onlyDiscount").addEventListener("change", e => { state.onlyDiscount = e.target.checked; state.page = 1; render(); });
+$("#onlyNew").addEventListener("change", e => { state.onlyNew = e.target.checked; state.page = 1; render(); });
+
+/* --- Hammasini tozalash --- */
+function resetAll() {
+  state.q = "";
+  state.cats.clear();
+  state.minPrice = null;
+  state.maxPrice = null;
+  state.rating = 0;
+  state.onlyDiscount = false;
+  state.onlyNew = false;
+  state.sort = "popular";
+  state.page = 1;
+  $("#searchInput").value = "";
+  minInput.value = "";
+  maxInput.value = "";
+  range.value = PRICE_MAX;
+  $("#sortSelect").value = "popular";
+  $("#onlyDiscount").checked = false;
+  $("#onlyNew").checked = false;
+  $('input[name="rating"][value="0"]').checked = true;
+  render();
+}
+$("#resetBtn").addEventListener("click", resetAll);
+
+/* --- Mobil filtr paneli --- */
+function openFilters() {
+  $("#sidebar").classList.add("open");
+  $("#filterBack").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+function closeFilters() {
+  $("#sidebar").classList.remove("open");
+  $("#filterBack").classList.remove("open");
+  if (!$("#overlay").classList.contains("open")) document.body.style.overflow = "";
+}
+$("#openFilters").addEventListener("click", openFilters);
+$("#closeFilters").addEventListener("click", closeFilters);
+$("#filterBack").addEventListener("click", closeFilters);
+$("#applyBtn").addEventListener("click", () => {
+  closeFilters();
+  window.scrollTo({ top: $(".shop").offsetTop - 20, behavior: "smooth" });
+});
+
+/* Boshqa oynada o'zgarsa, belgilarni yangilab turamiz */
+window.addEventListener("storage", e => {
+  if (e.key === "bn_cart" || e.key === "bn_fav") {
+    updateBadges();
+    $$(".fav-btn").forEach(b => b.classList.toggle("active", Store.fav.includes(Number(b.dataset.id))));
+  }
+});
+
+/* ---------- 9. Ishga tushirish ---------- */
+function init() {
+  $("#year").textContent = new Date().getFullYear();
+  readURL();
+  $("#searchInput").value = state.q;
+  $("#sortSelect").value = state.sort;
+  $("#viewGrid").classList.toggle("active", state.view === "grid");
+  $("#viewList").classList.toggle("active", state.view === "list");
+  updateBadges();
+  render();
+}
+init();
+</script>
+</body>
+</html>
